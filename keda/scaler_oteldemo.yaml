@@ -1,0 +1,89 @@
+
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth-dynatrace
+spec:
+  secretTargetRef:
+    - parameter: token
+      name: dynatrace-secret
+      key: token
+    - parameter: host
+      name: dynatrace-secret
+      key: host
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: scale-checkoutservice
+  namespace: otel-demo
+spec:
+  maxReplicaCount: 4
+  scaleTargetRef:
+    name: opentelemetry-demo-checkoutservice
+  triggers:
+    - type: dynatrace
+      metadata:
+        metricSelector: '(builtin:kubernetes.workload.cpu_usage:filter(and(or(eq("k8s.namespace.name",otel-demo)),or(eq("k8s.deployment.name",opentelemetry-demo-checkoutservice)))):splitBy("k8s.namespace.name","k8s.workload.kind","k8s.workload.name"):sum/builtin:kubernetes.workload.requests_cpu:filter(and(or(eq("k8s.namespace.name",otel-demo)),or(eq("k8s.deployment.name",opentelemetry-demo-checkoutservice))))
+  :splitBy("k8s.namespace.name","k8s.workload.kind","k8s.workload.name"):sum):default(0.0)*(100.0):setUnit(Percent)'
+        from: 'now-5m'
+        threshold: '120'
+      authenticationRef:
+        name: keda-trigger-auth-dynatrace
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: scale-frontend
+  namespace: otel-demo
+spec:
+  maxReplicaCount: 4
+  scaleTargetRef:
+    name: opentelemetry-demo-frontend
+  triggers:
+    - type: dynatrace
+      metadata:
+        metricSelector: '(builtin:kubernetes.workload.cpu_usage:filter(and(or(eq("k8s.namespace.name",otel-demo)),or(eq("k8s.deployment.name",opentelemetry-demo-frontend)))):splitBy("k8s.namespace.name","k8s.workload.kind","k8s.workload.name"):sum/builtin:kubernetes.workload.requests_cpu:filter(and(or(eq("k8s.namespace.name",otel-demo)),or(eq("k8s.deployment.name",opentelemetry-demo-frontend))))
+  :splitBy("k8s.namespace.name","k8s.workload.kind","k8s.workload.name"):sum):default(0.0)*(100.0):setUnit(Percent)'
+        from: 'now-5m'
+        threshold: '120'
+      authenticationRef:
+        name: keda-trigger-auth-dynatrace
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: scale-productcatalogservice
+  namespace: otel-demo
+spec:
+  maxReplicaCount: 4
+  scaleTargetRef:
+    name: opentelemetry-demo-productcatalogservice
+  triggers:
+    - type: dynatrace
+      metadata:
+        metricSelector: '(builtin:kubernetes.workload.cpu_usage:filter(and(or(eq("k8s.namespace.name",otel-demo)),or(eq("k8s.deployment.name",opentelemetry-demo-productcatalogservice)))):splitBy("k8s.namespace.name","k8s.workload.kind","k8s.workload.name"):sum/builtin:kubernetes.workload.requests_cpu:filter(and(or(eq("k8s.namespace.name",otel-demo)),or(eq("k8s.deployment.name",opentelemetry-demo-productcatalogservice))))
+  :splitBy("k8s.namespace.name","k8s.workload.kind","k8s.workload.name"):sum):default(0.0)*(100.0):setUnit(Percent)'
+        from: 'now-5m'
+        threshold: '120'
+      authenticationRef:
+        name: keda-trigger-auth-dynatrace
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: scale-cartservice
+  namespace: otel-demo
+spec:
+  maxReplicaCount: 4
+  scaleTargetRef:
+    name: opentelemetry-demo-cartservice
+  triggers:
+    - type: dynatrace
+      metadata:
+        metricSelector: '(builtin:kubernetes.workload.cpu_usage:filter(and(or(eq("k8s.namespace.name",otel-demo)),or(eq("k8s.deployment.name",opentelemetry-demo-cartservice)))):splitBy("k8s.namespace.name","k8s.workload.kind","k8s.workload.name"):sum/builtin:kubernetes.workload.requests_cpu:filter(and(or(eq("k8s.namespace.name",otel-demo)),or(eq("k8s.deployment.name",opentelemetry-demo-cartservice))))
+  :splitBy("k8s.namespace.name","k8s.workload.kind","k8s.workload.name"):sum):default(0.0)*(100.0):setUnit(Percent)'
+        from: 'now-5m'
+        threshold: '120'
+      authenticationRef:
+        name: keda-trigger-auth-dynatrace

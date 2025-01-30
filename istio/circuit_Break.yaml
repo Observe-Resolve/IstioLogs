@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: opentelemetry-demo-productcatalogservice
+  namespace: otel-demo
+spec:
+  host: opentelemetry-demo-productcatalogservice
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 5
+      http:
+        http1MaxPendingRequests: 2
+        maxRequestsPerConnection: 3
+    outlierDetection:
+      consecutive5xxErrors: 1
+      interval: 1s
+      baseEjectionTime: 3m
+      maxEjectionPercent: 100
