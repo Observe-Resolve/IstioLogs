@@ -66,16 +66,7 @@ spec:
               static_configs:
                 - targets:
                     - ${MY_POD_IP}:8888
-            - job_name: tetragon
-              scrape_interval: 5s
-              static_configs:
-                - targets:
-                    - tetragon.tetragon.svc.cluster.local:2112
-            - job_name: tetragon-operator
-              scrape_interval: 5s
-              static_configs:
-                - targets:
-                    - tetragon-operator-metrics.tetragon.svc.cluster.local:2113
+
 
 
             - job_name: kubernetes-pods
